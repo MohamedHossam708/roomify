@@ -1,5 +1,9 @@
 import Navbar from "components/Navbar";
 import type { Route } from "./+types/home";
+import { ArrowRight, Layers } from "lucide-react";
+import Button from "components/ui/button";
+import Hero from "./sections/Hero";
+import { Projects } from "./sections/Projects";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,9 +14,14 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return<>
+
   <div className="home">
-<Navbar/>
-  <h1 className="bg-red-400">Home</h1>
+  <Navbar/>
+
+  <Hero />
+
+  <Projects />
+
 
   </div>
   
