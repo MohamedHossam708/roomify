@@ -1,5 +1,5 @@
 import { CheckCircle2, ImageIcon, UploadIcon } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router'
 import type { AuthContext } from 'type'
 import { PROGRESS_INTERVAL_MS, PROGRESS_STEP, REDIRECT_DELAY_MS } from '../lib/constants'
@@ -9,17 +9,26 @@ const Upload = () => {
     const [isDragging, setIsDragging] = useState(false)
     const [progress, setProgress] = useState(0)
     const { isSignedIn } = useOutletContext<AuthContext>()
-    
+
     const navigate = useNavigate()
+    const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
-  const handelUploadComplete= async (base64:string)=>{
-    const newId = Date.now().toString()
+    useEffect(() => {
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current)
+            }
+        }
+    }, [])
 
-    navigate(`/visualizer/${newId}`)
+    const handelUploadComplete = async (base64: string) => {
+        const newId = Date.now().toString()
 
-    return true
+        navigate(`/visualizer/${newId}`)
 
-  }
+        return true
+
+    }
 
     const processFile = (file: File) => {
         if (!isSignedIn) return;
@@ -27,12 +36,23 @@ const Upload = () => {
 
         const reader = new FileReader();
 
+        reader.onerror=()=>{
+            setFile(null)
+            setProgress(0)
+        }
+
         reader.onload = (e) => {
             const base64 = e.target?.result as string;
-            const interval = setInterval(() => {
+
+            if (intervalRef.current) clearInterval(intervalRef.current);
+
+            intervalRef.current = setInterval(() => {
                 setProgress((prev) => {
                     if (prev >= 100) {
-                        clearInterval(interval);
+                        if (intervalRef.current) {
+                            clearInterval(intervalRef.current);
+                            intervalRef.current = null;
+                        }
                         setTimeout(() => {
                             // Call onComplete or handle redirection here
                             handelUploadComplete(base64)
@@ -62,7 +82,8 @@ const Upload = () => {
         if (!isSignedIn) return;
 
         const droppedFile = e.dataTransfer.files[0];
-        if (droppedFile && droppedFile.type.startsWith('image/')) {
+        const allowedTypes=['image/jpeg','image/png','image/jpg']
+        if (droppedFile && allowedTypes.includes(droppedFile.type)) {
             processFile(droppedFile);
         }
     };
