@@ -13,7 +13,7 @@ import type { AuthState } from "type";
 import { useEffect, useState } from "react";
 import { getCurrentUser, 
   signIn as  puterSignIn
-  , signOut as puterSignOut } from "components/lib/puter.actions";
+  , signOut as puterSignOut } from "lib/puter.actions";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
