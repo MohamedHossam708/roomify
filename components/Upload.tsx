@@ -1,10 +1,14 @@
 import { CheckCircle2, ImageIcon, UploadIcon } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router'
-import type { AuthContext } from 'type'
 import { PROGRESS_INTERVAL_MS, PROGRESS_STEP, REDIRECT_DELAY_MS } from '../lib/constants'
+import { createProject } from 'lib/puter.actions'
 
-const Upload = () => {
+interface UploadProps {
+    setProjects: React.Dispatch<React.SetStateAction<DesignItem[] | null>>;
+}
+
+export const Upload = ({ setProjects }: UploadProps) => {
     const [file, setFile] = useState<File | null>(null)
     const [isDragging, setIsDragging] = useState(false)
     const [progress, setProgress] = useState(0)
@@ -13,18 +17,36 @@ const Upload = () => {
     const navigate = useNavigate()
     const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
-    useEffect(() => {
-        return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current)
-            }
-        }
-    }, [])
+   
 
     const handelUploadComplete = async (base64: string) => {
         const newId = Date.now().toString()
+        const name =`Residence ${newId}`
 
-        navigate(`/visualizer/${newId}`)
+        const newItem ={
+           id:newId , 
+            name ,
+             sourceImage:base64,
+             renderImage : undefined,
+             timestamp : Date.now(),
+             
+        }
+
+        const saved = await createProject({item:newItem , visibility:"private"})
+
+        if(!saved){
+            console.error("Failed to create project")
+            return false
+        }
+
+        setProjects((prev)=> [newItem, ...(prev || [])])
+        navigate(`/visualizer/${newId}`, {
+            state:{
+                initialImage:saved.sourceImage,
+                initialRendered:saved.renderedImage || null,
+                name
+            }
+        })
 
         return true
 
@@ -94,6 +116,16 @@ const Upload = () => {
             processFile(selectedFile);
         }
     };
+
+
+
+     useEffect(() => {
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current)
+            }
+        }
+    }, [])
 
     return <>
         <div className="upload">

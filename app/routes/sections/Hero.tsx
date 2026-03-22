@@ -3,7 +3,11 @@ import Upload from "components/Upload";
 import { ArrowRight, Layers } from "lucide-react";
 
 
-export default function Hero() {
+interface HeroProps {
+    setProjects: React.Dispatch<React.SetStateAction<DesignItem[] | null>>;
+}
+
+export default function Hero({ setProjects }: HeroProps) {
 
 
     return <>
@@ -38,7 +42,7 @@ export default function Hero() {
                         </div>
                         <h3>Upload your Floor plan</h3>
                         <p>Supports JPG , PWG , formats up tp 10MB</p>
-                        <Upload/>
+                        <Upload setProjects={setProjects}/>
                     </div>
                 </div>
             </div>
