@@ -23,13 +23,12 @@ export const Upload = ({ setProjects }: UploadProps) => {
         const newId = Date.now().toString()
         const name =`Residence ${newId}`
 
-        const newItem ={
-           id:newId , 
-            name ,
-             sourceImage:base64,
-             renderImage : undefined,
-             timestamp : Date.now(),
-             
+         const newItem = {
+            id: newId,
+            name,
+            sourceImage: base64,
+            renderedImage: undefined,
+            timestamp: Date.now(),
         }
 
         const saved = await createProject({item:newItem , visibility:"private"})
@@ -39,12 +38,12 @@ export const Upload = ({ setProjects }: UploadProps) => {
             return false
         }
 
-        setProjects((prev)=> [newItem, ...(prev || [])])
+        setProjects((prev)=> [saved, ...(prev || [])])
         navigate(`/visualizer/${newId}`, {
-            state:{
-                initialImage:saved.sourceImage,
-                initialRendered:saved.renderedImage || null,
-                name
+             state: {
+                initialImage: saved.sourceImage,
+                initialRender: saved.renderedImage || null,
+                name,
             }
         })
 

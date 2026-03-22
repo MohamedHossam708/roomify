@@ -19,8 +19,9 @@ export const Projects = ({ projects }: ProjectsProps) => {
 
     <div className="projects-grid">
       {projects?.map(({id,name, renderedImage,sourceImage , timestamp})=>(
+        
 
-        <div className="project-card  group">
+        <div className="project-card  group" key={id}>
         <div className="preview">
           <img
            src={renderedImage || sourceImage} 
