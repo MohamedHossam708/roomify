@@ -1,9 +1,11 @@
 import { ArrowUpRight, Clock } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 
-export const Projects = () => {
+interface ProjectsProps {
+    projects: DesignItem[] | null;
+}
 
-
+export const Projects = ({ projects }: ProjectsProps) => {
   return <>
 
   <section className="projects">
@@ -16,10 +18,13 @@ export const Projects = () => {
         </div>
 
     <div className="projects-grid">
-      <div className="project-card  group">
+      {projects?.map(({id,name, renderedImage,sourceImage , timestamp})=>(
+        
+
+        <div className="project-card  group" key={id}>
         <div className="preview">
           <img
-           src='https://roomify-mlhuk267-dfwu1i.puter.site/projects/1770803585402/rendered.png' 
+           src={renderedImage || sourceImage} 
            alt="Project image" />
 
            <div className="badge ">
@@ -29,11 +34,11 @@ export const Projects = () => {
         </div>
          <div className="card-body">
           <div>
-            <h3>Project New Cairo</h3>
+            <h3>{name}</h3>
 
              <div className="meta">
             <Clock size={12}/>
-            <span>{new Date('03/03/2026').toLocaleDateString()} </span>
+            <span>{new Date(timestamp).toLocaleDateString()} </span>
             <span>By Mohamed Hossam</span>
           </div>
           </div>
@@ -42,6 +47,8 @@ export const Projects = () => {
             </div>
         </div>
       </div>
+      ))}
+      
     </div>
     </div>
 

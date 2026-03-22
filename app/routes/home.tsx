@@ -2,6 +2,7 @@ import Navbar from "components/Navbar";
 import type { Route } from "./+types/home";
 import Hero from "./sections/Hero";
 import { Projects } from "./sections/Projects";
+import { useState } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -11,17 +12,16 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-
-  
+  const [projects, setProjects] = useState<DesignItem[] | null>(null);
   
   return<>
 
   <div className="home">
   <Navbar/>
 
-  <Hero/>
+  <Hero setProjects={setProjects} />
 
-  <Projects/>
+  <Projects projects={projects} />
 
 
   </div>
