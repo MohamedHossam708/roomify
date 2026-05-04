@@ -42,7 +42,7 @@ export default function Hero({ setProjects, isCreatingProjectRef }: HeroProps) {
                             <Layers className="icon" />
                         </div>
                         <h3>Upload your Floor plan</h3>
-                        <p>Supports JPG , PWG , formats up tp 10MB</p>
+                        <p>Supports JPG , PWG , formats up tp 50MB</p>
                         <Upload setProjects={setProjects} isCreatingRef={isCreatingProjectRef} />
                     </div>
                 </div>
