@@ -158,7 +158,7 @@ export const Upload = ({ setProjects , isCreatingRef}: UploadProps) => {
                     <input
                         type="file"
                         className='drop-input'
-                        accept='.jpg,.jpeg,.png'
+                        accept='.jpg,.jpeg,.png,webp'
                         disabled={!isSignedIn}
                         onChange={handleChange}
                     />
