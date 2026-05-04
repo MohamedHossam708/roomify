@@ -2,13 +2,14 @@ import { CheckCircle2, ImageIcon, UploadIcon } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router'
 import { PROGRESS_INTERVAL_MS, PROGRESS_STEP, REDIRECT_DELAY_MS } from '../lib/constants'
-import { createProject } from 'lib/puter.actions'
+import { createProject, getProjects } from 'lib/puter.actions'
 
 interface UploadProps {
     setProjects: React.Dispatch<React.SetStateAction<DesignItem[] | null>>;
+    isCreatingRef: React.MutableRefObject<boolean>
 }
 
-export const Upload = ({ setProjects }: UploadProps) => {
+export const Upload = ({ setProjects , isCreatingRef}: UploadProps) => {
     const [file, setFile] = useState<File | null>(null)
     const [isDragging, setIsDragging] = useState(false)
     const [progress, setProgress] = useState(0)
@@ -20,6 +21,9 @@ export const Upload = ({ setProjects }: UploadProps) => {
    
 
     const handelUploadComplete = async (base64: string) => {
+        try {
+            if(isCreatingRef.current) return false
+        isCreatingRef.current=true
         const newId = Date.now().toString()
         const name =`Residence ${newId}`
 
@@ -48,8 +52,24 @@ export const Upload = ({ setProjects }: UploadProps) => {
         })
 
         return true
+        } catch (error) {
+            console.log(`Failed to create project` , error);
+            return false
+        }finally{
+            isCreatingRef.current = false
+        }
 
     }
+
+    useEffect(() =>{
+        const fetchProjects = async ()=>{
+            const items = await getProjects()
+
+            setProjects(items)
+        }
+
+        fetchProjects()
+    },[])
 
     const processFile = (file: File) => {
         if (!isSignedIn) return;

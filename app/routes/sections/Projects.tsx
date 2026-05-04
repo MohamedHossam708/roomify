@@ -1,11 +1,13 @@
 import { ArrowUpRight, Clock } from 'lucide-react'
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router';
 
 interface ProjectsProps {
     projects: DesignItem[] | null;
 }
 
 export const Projects = ({ projects }: ProjectsProps) => {
+  const navigate = useNavigate()
   return <>
 
   <section className="projects">
@@ -18,10 +20,17 @@ export const Projects = ({ projects }: ProjectsProps) => {
         </div>
 
     <div className="projects-grid">
-      {projects?.map(({id,name, renderedImage,sourceImage , timestamp})=>(
-        
-
-        <div className="project-card  group" key={id}>
+      {projects?.map((item: any) => {
+        const p = item.value || item;
+        const { id, name, renderedImage, sourceImage, timestamp } = p;
+        return (
+        <div className="project-card  group" key={id || Math.random()} onClick={()=>navigate(`/visualizer/${id}` , {
+          state: {
+            initialImage: sourceImage,
+            initialRender: renderedImage,
+            name,
+          }
+        })}>
         <div className="preview">
           <img
            src={renderedImage || sourceImage} 
@@ -47,7 +56,8 @@ export const Projects = ({ projects }: ProjectsProps) => {
             </div>
         </div>
       </div>
-      ))}
+      );
+      })}
       
     </div>
     </div>
