@@ -5,9 +5,10 @@ import { ArrowRight, Layers } from "lucide-react";
 
 interface HeroProps {
     setProjects: React.Dispatch<React.SetStateAction<DesignItem[] | null>>;
+    isCreatingProjectRef: React.MutableRefObject<boolean>;
 }
 
-export default function Hero({ setProjects }: HeroProps) {
+export default function Hero({ setProjects, isCreatingProjectRef }: HeroProps) {
 
 
     return <>
@@ -42,7 +43,7 @@ export default function Hero({ setProjects }: HeroProps) {
                         </div>
                         <h3>Upload your Floor plan</h3>
                         <p>Supports JPG , PWG , formats up tp 10MB</p>
-                        <Upload setProjects={setProjects}/>
+                        <Upload setProjects={setProjects} isCreatingRef={isCreatingProjectRef} />
                     </div>
                 </div>
             </div>

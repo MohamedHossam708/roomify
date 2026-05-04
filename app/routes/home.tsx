@@ -1,8 +1,8 @@
 import Navbar from "components/Navbar";
-import type { Route } from "./+types/home";
 import Hero from "./sections/Hero";
 import { Projects } from "./sections/Projects";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import type { Route } from "../+types/root";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -13,13 +13,13 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   const [projects, setProjects] = useState<DesignItem[] | null>(null);
-  
+  const isCrateingProjectRef= useRef(false)
   return<>
 
   <div className="home">
   <Navbar/>
 
-  <Hero setProjects={setProjects} />
+  <Hero setProjects={setProjects} isCreatingProjectRef={isCrateingProjectRef} />
 
   <Projects projects={projects} />
 
